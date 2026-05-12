@@ -7,6 +7,7 @@ canvas.height = 400;
 
 // Game Variables
 let gameRunning = false;
+let gameMode = 'single'; // 'single' or 'multi'
 let playerScore = 0;
 let computerScore = 0;
 
@@ -59,6 +60,39 @@ canvas.addEventListener('mousemove', (e) => {
     mouseY = e.clientY - rect.top;
 });
 
+// Mode Selection
+const modeBtns = document.querySelectorAll('.mode-btn');
+modeBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        if (!gameRunning) {
+            modeBtns.forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            gameMode = e.target.dataset.mode;
+            updateInstructions();
+            resetScore();
+        }
+    });
+});
+
+function updateInstructions() {
+    const singleInstructions = document.getElementById('singlePlayerInstructions');
+    const multiInstructions = document.getElementById('multiPlayerInstructions');
+    const player1Label = document.getElementById('player1Label');
+    const player2Label = document.getElementById('player2Label');
+
+    if (gameMode === 'single') {
+        singleInstructions.classList.add('active');
+        multiInstructions.classList.remove('active');
+        player1Label.textContent = 'Player';
+        player2Label.textContent = 'Computer';
+    } else {
+        singleInstructions.classList.remove('active');
+        multiInstructions.classList.add('active');
+        player1Label.textContent = 'Player 1';
+        player2Label.textContent = 'Player 2';
+    }
+}
+
 // Event Listeners for Buttons
 document.getElementById('startBtn').addEventListener('click', startGame);
 document.getElementById('resetBtn').addEventListener('click', resetScore);
@@ -66,13 +100,25 @@ document.getElementById('resetBtn').addEventListener('click', resetScore);
 function startGame() {
     gameRunning = !gameRunning;
     document.getElementById('startBtn').textContent = gameRunning ? 'Pause Game' : 'Start Game';
+    
+    // Disable mode selection during gameplay
+    modeBtns.forEach(btn => {
+        btn.disabled = gameRunning;
+        btn.style.opacity = gameRunning ? '0.3' : '1';
+    });
 }
 
 function resetScore() {
     playerScore = 0;
     computerScore = 0;
+    gameRunning = false;
     document.getElementById('playerScore').textContent = playerScore;
     document.getElementById('computerScore').textContent = computerScore;
+    document.getElementById('startBtn').textContent = 'Start Game';
+    modeBtns.forEach(btn => {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+    });
     resetBall();
 }
 
@@ -117,16 +163,16 @@ function drawGame() {
 
 // Update Functions
 function updatePlayerPaddle() {
-    // Mouse control
-    if (mouseY > canvas.getBoundingClientRect().top) {
+    // Mouse control (for single player mode)
+    if (gameMode === 'single' && mouseY > 0) {
         player.y = mouseY - paddleHeight / 2;
     }
 
     // Arrow key control
-    if (keys['ArrowUp'] || keys['w']) {
+    if (keys['ArrowUp'] || keys['w'] || keys['W']) {
         player.y -= player.speed;
     }
-    if (keys['ArrowDown'] || keys['s']) {
+    if (keys['ArrowDown'] || keys['s'] || keys['S']) {
         player.y += player.speed;
     }
 
@@ -140,14 +186,29 @@ function updatePlayerPaddle() {
 }
 
 function updateComputerPaddle() {
-    // Simple AI: follow the ball
-    const computerCenter = computer.y + computer.height / 2;
-    const difficulty = 1.5; // Adjust for difficulty
+    if (gameMode === 'single') {
+        // AI: follow the ball
+        const computerCenter = computer.y + computer.height / 2;
+        const difficulty = 1.5;
 
-    if (computerCenter < ball.y - 35) {
-        computer.y += computer.speed * difficulty;
-    } else if (computerCenter > ball.y + 35) {
-        computer.y -= computer.speed * difficulty;
+        if (computerCenter < ball.y - 35) {
+            computer.y += computer.speed * difficulty;
+        } else if (computerCenter > ball.y + 35) {
+            computer.y -= computer.speed * difficulty;
+        }
+    } else {
+        // Multiplayer: Player 2 controls
+        // I/K keys for movement
+        if (keys['i'] || keys['I']) {
+            computer.y -= computer.speed;
+        }
+        if (keys['k'] || keys['K']) {
+            computer.y += computer.speed;
+        }
+
+        // Alternative: Mouse Y position for Player 2
+        // Uncomment to enable mouse control for Player 2
+        // computer.y = mouseY - paddleHeight / 2;
     }
 
     // Boundary collision for computer paddle
@@ -228,5 +289,6 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Start the game loop
+// Initialize
+updateInstructions();
 gameLoop();
