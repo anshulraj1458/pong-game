@@ -3,17 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pong Game</title>
+    <title>Pong Game - Online Multiplayer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Pong Game</h1>
         
-        <!-- Mode Selection -->
+        <!-- Online/Offline Mode Selection -->
         <div class="mode-selector" id="modeSelector">
             <button class="mode-btn active" data-mode="single">Single Player (vs AI)</button>
-            <button class="mode-btn" data-mode="multi">Multiplayer (2 Players)</button>
+            <button class="mode-btn" data-mode="multi">Local Multiplayer</button>
+            <button class="mode-btn" data-mode="online">Online Multiplayer</button>
+        </div>
+
+        <!-- Online Lobby Section -->
+        <div id="onlineLobby" class="online-lobby hidden">
+            <div class="lobby-content">
+                <h2>Online Multiplayer</h2>
+                <div id="connectionStatus" class="connection-status">
+                    <span class="status-dot"></span>
+                    <span id="statusText">Connecting to server...</span>
+                </div>
+                
+                <div class="lobby-actions">
+                    <div class="input-group">
+                        <input type="text" id="playerName" placeholder="Enter your name" maxlength="15">
+                        <button id="setNameBtn" class="btn-primary">Set Name</button>
+                    </div>
+                </div>
+
+                <div class="room-selection">
+                    <h3>Create or Join Room</h3>
+                    <div class="room-input">
+                        <input type="text" id="roomCode" placeholder="Room Code (optional)" maxlength="8">
+                        <button id="createRoomBtn" class="btn-primary">Create Room</button>
+                        <button id="joinRoomBtn" class="btn-primary">Join Room</button>
+                    </div>
+                </div>
+
+                <div id="roomInfo" class="room-info hidden">
+                    <p>Room Code: <span id="displayRoomCode"></span></p>
+                    <p>Status: <span id="roomStatus">Waiting for opponent...</span></p>
+                    <button id="exitRoomBtn" class="btn-secondary">Exit Room</button>
+                </div>
+
+                <div id="playersList" class="players-list hidden">
+                    <h3>Players:</h3>
+                    <div id="playersContainer"></div>
+                </div>
+            </div>
         </div>
 
         <div class="scoreboard">
@@ -26,7 +65,9 @@
                 <p id="computerScore">0</p>
             </div>
         </div>
+        
         <canvas id="pongCanvas"></canvas>
+        
         <div class="instructions">
             <div id="singlePlayerInstructions" class="instruction-set active">
                 <p><strong>Single Player Controls:</strong> Use Mouse or Arrow Keys (↑/↓) to move the left paddle</p>
@@ -35,10 +76,16 @@
                 <p><strong>Player 1 (Left):</strong> Arrow Keys (↑/↓) or W/S</p>
                 <p><strong>Player 2 (Right):</strong> Mouse or I/K Keys</p>
             </div>
+            <div id="onlineInstructions" class="instruction-set">
+                <p><strong>Online Controls:</strong> Arrow Keys (↑/↓) or W/S to move your paddle</p>
+                <p><span id="oppStatus">Waiting for opponent...</span></p>
+            </div>
             <button id="startBtn" class="start-btn">Start Game</button>
             <button id="resetBtn" class="reset-btn">Reset Score</button>
         </div>
     </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
