@@ -1,0 +1,160 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #000 0%, #1a1a2e 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #fff;
+}
+
+.container {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.3), inset 0 0 30px rgba(0, 255, 136, 0.1);
+    border: 2px solid #00ff88;
+    max-width: 900px;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #00ff88;
+    text-shadow: 0 0 10px #00ff88;
+    letter-spacing: 2px;
+}
+
+.scoreboard {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    gap: 40px;
+}
+
+.score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.score span {
+    font-size: 1.2em;
+    color: #00ff88;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.score p {
+    font-size: 3em;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 10px #00ff88;
+    min-width: 100px;
+}
+
+#pongCanvas {
+    border: 3px solid #00ff88;
+    background-color: #000;
+    display: block;
+    margin: 20px auto;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    cursor: none;
+}
+
+.instructions {
+    margin-top: 20px;
+    color: #aaa;
+    font-size: 0.95em;
+}
+
+.instructions p {
+    margin-bottom: 15px;
+    color: #00ff88;
+}
+
+.instructions strong {
+    color: #fff;
+}
+
+.start-btn,
+.reset-btn {
+    padding: 12px 30px;
+    margin: 0 10px;
+    font-size: 1em;
+    font-weight: bold;
+    border: 2px solid #00ff88;
+    background: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.start-btn:hover,
+.reset-btn:hover {
+    background: #00ff88;
+    color: #000;
+    box-shadow: 0 0 15px #00ff88;
+    transform: scale(1.05);
+}
+
+.start-btn:active,
+.reset-btn:active {
+    transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    #pongCanvas {
+        width: 100%;
+        height: auto;
+    }
+
+    .scoreboard {
+        gap: 20px;
+    }
+
+    .score p {
+        font-size: 2em;
+    }
+
+    .start-btn,
+    .reset-btn {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 0.9em;
+    }
+}
+
+/* Animations */
+@keyframes glow {
+    0%, 100% {
+        text-shadow: 0 0 10px #00ff88;
+    }
+    50% {
+        text-shadow: 0 0 20px #00ff88, 0 0 30px #00ff88;
+    }
+}
+
+h1 {
+    animation: glow 2s ease-in-out infinite;
+}
